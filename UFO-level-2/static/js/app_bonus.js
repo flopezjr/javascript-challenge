@@ -1,34 +1,56 @@
-const tableData = data
-const filters = {}
+//bring over level-1
+function tableData(data) {
+    
+    let table = d3.select("#ufo-table")
 
-function buildTable() {
-    const tbody = d3.select('tbody')
-    tbody.html('')
-    data.forEach(dataRow => {
-        const elements = tbody.append('tr')
-        Object.values(dataRow).forEach(value => tbody.append('td').text(value))
+    table.selectAll("tr").remove()
+    
+    // set up header row
+    let headerRow = table.append("tr")
+
+    headerRow.append("th").text("Datetime")
+    headerRow.append("th").text("City")
+    headerRow.append("th").text("State")
+    headerRow.append("th").text("Country")
+    headerRow.append("th").text("Shape")
+    headerRow.append("th").text("Duration (min)")
+    headerRow.append("th").text("Comments")
+
+    // set up table body
+    let tableBody = table.append("tbody")
+
+    data.forEach((d) => {
+        let row = tableBody.append("tr")
+        row.append("td").text(d.datetime)
+        row.append("td").text(d.city)
+        row.append("td").text(d.state)
+        row.append("td").text(d.country)
+        row.append("td").text(d.shape)
+        row.append("td").text(d.durationMinutes)
+        row.append("td").text(d.comments)
     })
+
 }
 
-function updateFilters() {
-    const changedElement = d3.select(this).select("input");
-    const elementValue = changedElement.property("value");
-    const filterId = changedElement.attr("id");
+// create function to filter by date input
+function handleClick() {
+    let dateInput = d3.select("#datetime").property("value")
+    let filteredDate = data.filter((d) => d.datetime === dateInput)
 
-    elementValue ? filters[filterId] = elementValue : delete filters[filterId]
-
-    filterTable()
+    tableData(filteredDate)
 }
 
-function filterTable() {
-    let filteredData = tableData
+// pass id for button and function to click
+d3.select("#filter-btn").on("click", handleClick)
 
-    Object.entries(filters).forEach(([key, value]) => {
-        filteredData = filteredData.filter(row => row[key] === value)
-    })
+/////
+// Complete all of Level 1 criteria.
 
-    buildTable(filteredData)
-}
+// Using multiple input tags and/or select dropdowns, write JavaScript code so the user can to set multiple filters and search for UFO sightings using the following criteria based on the table columns:
 
-d3.selectAll('.filter').on('change', updateFilters)
-buildTable()
+// date/time
+// city
+// state
+// country
+// shape
+
